@@ -1,0 +1,49 @@
+﻿@model IEnumerable<EFrazier_Blog.Models.BlogPost>
+
+<!-- Page Header -->
+<!-- Set your background image for this header on the line below. -->
+<header class="intro-header" style="background-image: url('../Img/Code-tiltshift.jpg');">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="site-heading">
+                    <h1>Eli Frazier's Blog</h1>
+                    <hr class="small">
+                    <span class="subheading">This is my personal blog, enjoy!</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Main Content -->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+            @*@foreach (var post in Model)
+            {
+                <div class="post-preview">
+                    <a href="@Url.Action("Details", "BlogPosts", new { slug = post.Slug })">
+                        <h2 class="post-title">
+                            @post.Title
+                        </h2>
+                        <h3 class="post-subtitle">
+                            @post.Abstract
+                        </h3>
+                    </a>
+                    <p class="post-meta">Posted on @post.Created</p>
+                </div>
+                <hr>
+            }*@
+
+            <!-- Pager -->
+            <ul class="pager">
+                <li class="next">
+                    <a href="#">Older Posts &rarr;</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<hr>

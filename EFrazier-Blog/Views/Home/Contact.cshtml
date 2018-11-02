@@ -1,0 +1,133 @@
+﻿@model EFrazier_Blog.Models.Email
+
+
+
+<!-- Page Header -->
+<!-- Set your background image for this header on the line below. -->
+<header class="intro-header" style="background-image: url('../Img/Contact-image.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="page-heading">
+                    <h1>Contact Me</h1>
+                    <hr class="small">
+                    <span class="subheading">Message me anytime.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- Main Content -->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <p>Have any questions? Just fill out this form and I'll get back to you as soon as I can!</p>
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                <form name="sentMessage" id="contactForm" novalidate>
+                    <div class="row control-group">
+                        <div class="form-group col-xs-12 floating-label-form-group controls">
+                            <Label>@Html.LabelFor(m => m.FromName, new { @class = "col-md-2 control-label" })</Label>
+
+                            @Html.TextBoxFor(m => m.FromName, new { @class = "form-control", placeholder = "Name", id = "name" })
+                            <p class="help-block text-danger"> @Html.ValidationMessageFor(m => m.FromName)</p>
+                        </div>
+                    </div>
+
+                    <div class="row control-group">
+                        <div class="form-group col-xs-12 floating-label-form-group controls">
+                            <Label>@Html.LabelFor(m => m.FromEmail, new { @class = "col-md-2 control-label" })</Label>
+
+                            @Html.TextBoxFor(m => m.FromEmail, new { @class = "form-control", placeholder = "Email Address", id = "email" })
+                            <p class="help-block text-danger"> @Html.ValidationMessageFor(m => m.FromEmail)</p>
+                        </div>
+                    </div>
+                    <div class="row control-group">
+                        <div class="form-group col-xs-12 floating-label-form-group controls">
+                            <Label>@Html.LabelFor(m => m.Subject, new { @class = "col-md-2 control-label" })</Label>
+
+                            @Html.TextBoxFor(m => m.Subject, new { @class = "form-control", placeholder = "Subject" })
+                            <p class="help-block text-danger"> @Html.ValidationMessageFor(m => m.Subject)</p>
+                        </div>
+                    </div>
+
+                    <div class="row control-group">
+                        <div class="form-group col-xs-12 floating-label-form-group controls">
+                            <Label>@Html.LabelFor(m => m.Body, new { @class = "col-md-2 control-label" })</Label>
+
+                            @Html.TextBoxFor(m => m.Body, new { @class = "form-control", placeholder = "Message", id = "message" })
+                            <p class="help-block text-danger">@Html.ValidationMessageFor(m => m.Body)</p>
+                        </div>
+
+                        <br>
+                        <div id="success"></div>
+                        <div class="row">
+                            <div class="form-group col-xs-12">
+                                <button type="submit" class="btn btn-default">Send</button>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            }
+        </div>
+    </div>
+</div>
+<hr>
+
+@section scripts
+{
+    <script>
+        //Look for a specific piece of data and if it is there then throw the swal...
+        if("@ViewBag.Message" == "Success")
+        {
+            swal("Sent", "Your message has been sent!", "success");
+        }
+
+
+    </script>
+
+
+}@*@using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <h4>Send me a message.</h4>
+        <hr />
+        @Html.ValidationSummary("", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(m => m.FromName, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.FromName, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.FromName)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.FromEmail, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.FromEmail, new { @class = "form-control", placeholder = "example@email.com" })
+                @Html.ValidationMessageFor(m => m.FromEmail)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Subject, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Subject, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Subject)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Body, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Body, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Body)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" class="btn btn-primary" value="Send" />
+            </div>
+        </div>
+    }*@

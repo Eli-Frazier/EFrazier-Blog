@@ -1,0 +1,91 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+
+@model IPagedList<EFrazier_Blog.Models.BlogPost>
+
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css">
+
+<!-- Page Header -->
+<!-- Set your background image for this header on the line below. -->
+<header class="intro-header" style="background-image: url('../Img/Code-tiltshift.jpg');">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="site-heading">
+                    <h1>Eli Frazier's Blog</h1>
+                    <hr class="small">
+                    <span class="subheading">This is my personal blog, enjoy!</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Main Content -->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            @using (Html.BeginForm("Index", "BlogPosts", FormMethod.Get, htmlAttributes: new { @class = "form" }))
+            {
+                <form name="sentMessage" id="contactForm" novalidate>
+                    <div class="row control-group">
+                        <div class="form-group floating-label-form-group controls">
+                            <Label>Search</Label>
+                            <input id="searchStr" name="searchStr" class="input-block-level" type="text" placeholder="Search" />
+                            <button id="searchStr" name="searchStr" class="btn btn-success" type="submit">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                    @*<div class="controls controls-row search-row">
+                        <input id="searchStr" name="searchStr" class="input-block-level" type="text" placeholder="Search" />
+                        <button id="searchStr" name="searchStr" class="btn btn-success" type="submit">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>*@
+            }
+
+
+            @foreach (var post in Model)
+            {
+
+                <div class="post-preview">
+                    <a href="@Url.Action("Details", "BlogPosts", new { slug = post.Slug })">
+                        <h2 class="post-title">
+                            @post.Title
+                        </h2>
+                        <h3 class="post-subtitle">
+                            @post.Abstract
+                        </h3>
+                    </a>
+                    <p class="post-meta">Posted on @post.Created.ToString().Split(' ')[0]</p>
+                    @if (post.Updated != null)
+                    {
+                        <p class="post-meta">Updated on @post.Updated.ToString().Split(' ')[0]</p>
+                    }
+                    <p class="post-meta">
+                        @if (User.IsInRole("Admin"))
+                        {
+                            @Html.ActionLink("Edit ", "Edit", new { id = post.Id })
+                            <span>|</span>
+                            @Html.ActionLink(" Delete", "Delete", new { id = post.Id })
+                        }
+                    </p>
+                </div>
+                <hr>
+            }
+
+            <!-- Pager -->
+            <ul class="pager">
+                <li class="next">
+                    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, searchStr = ViewBag.Search }))
+
+                    @*<a href="#">Older Posts &rarr;</a>*@
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<hr>

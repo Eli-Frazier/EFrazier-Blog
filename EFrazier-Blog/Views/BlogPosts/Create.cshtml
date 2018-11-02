@@ -1,0 +1,187 @@
+﻿@model EFrazier_Blog.Models.BlogPost
+
+@{
+    ViewBag.Title = "Create";
+}
+
+@*<style>
+    .navbar {
+        background-color: rgba(255, 255, 255, 0.9);
+    }
+
+    .navbar-custom .nav li a {
+        color: black;
+    }
+
+    .navbar-custom .navbar-brand {
+        color: black;
+    }
+
+    body {
+        background-color: #c3ecef;
+        padding-top: 50px;
+    }
+
+    /*.form-group {
+        padding-left: 450px;
+    }*/
+</style>*@
+
+<!-- Page Header -->
+<!-- Set your background image for this header on the line below. -->
+<header class="intro-header" style="background-color: purple">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="site-heading">
+                    <h1>New Post</h1>
+                    <hr class="small">
+                    <span class="subheading">Write whatever the hell you want</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            @using (Html.BeginForm("Create", "BlogPosts", FormMethod.Post, new { enctype = "Multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                <form name="sentMessage" id="contactForm" novalidate>
+                    <div class="row control-group">
+                        <div class="form-group col-xs-12 floating-label-form-group controls">
+                            <Label>@Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label" })</Label>
+
+                            @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control", placeholder = "Title", id = "name" } })
+                            <p class="help-block text-danger"> @Html.ValidationMessageFor(model => model.Title)</p>
+                        </div>
+                    </div>
+
+                    <div class="row control-group">
+                        <div class="form-group col-xs-12 floating-label-form-group controls">
+                            <Label>@Html.LabelFor(model => model.Abstract, new { @class = "control-label" })</Label>
+
+                            @Html.TextBoxFor(model => model.Abstract, new { @class = "form-control", placeholder = "Abstract", id = "email" })
+                            <p class="help-block text-danger"> @Html.ValidationMessageFor(model => model.Abstract)</p>
+                        </div>
+                    </div>
+                    <div class="row control-group">
+                        <div class="form-group col-xs-12 floating-label-form-group controls">
+                            <Label>@Html.LabelFor(model => model.Body, new { @class = "col-md-2 control-label" })</Label>
+
+                            @Html.TextBoxFor(model => model.Body, new { @class = "form-control", placeholder = "Subject" })
+                            <p class="help-block text-danger"> @Html.ValidationMessageFor(model => model.Body)</p>
+                        </div>
+                    </div>
+                    <div class="row control-group">
+
+                        <div class="form-group col-xs-12 floating-label-form-group controls">
+                            <Label>@Html.LabelFor(model => model.MediaURL, new { @class = "col-md-2 control-label" })</Label>
+
+                            <input name="image" type="file" class="form-control" id="fileUpload" />
+                            <p class="help-block text-danger">@Html.ValidationMessageFor(model => model.MediaURL)</p>
+                        </div>
+                    </div>
+                    <div class="row control-group">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Published, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-5">
+                                <div class="checkbox">
+                                    @Html.EditorFor(model => model.Published)
+                                    @Html.ValidationMessageFor(model => model.Published, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row control-group">
+                        <div id="success"></div>
+                        <div class="row">
+                            <div class="form-group col-xs-12">
+                                <input type="submit" value="Create" class="btn btn-default" />
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            }
+        </div>
+    </div>
+</div>
+<hr>
+<div class="col-lg-offset-2">
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/tinymce/tinymce.min.js"></script>
+    <script src="~/Scripts/tinymce/jquery.tinymce.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            tinymce.init({
+                selector: '#Body'
+            });
+        });
+    </script>
+
+}
+
+
+@*@Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            <h4 class="text-center">BlogPost</h4>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-5">
+                    @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Abstract, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-5">
+                    @Html.EditorFor(model => model.Abstract, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Abstract, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Body, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-5">
+                    @Html.EditorFor(model => model.Body, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Body, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.MediaURL, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-5">
+                    <input name="image" type="file" class="form-control" id="fileUpload" />
+                    @Html.ValidationMessageFor(model => model.MediaURL, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Published, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-5">
+                    <div class="checkbox">
+                        @Html.EditorFor(model => model.Published)
+                        @Html.ValidationMessageFor(model => model.Published, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    }*@

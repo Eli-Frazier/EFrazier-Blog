@@ -1,0 +1,105 @@
+﻿@model EFrazier_Blog.Models.BlogPost
+
+
+
+<!-- Page Header -->
+<!-- Set your background image for this header on the line below. -->
+<header class="intro-header" style="background-color: mediumpurple">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    @Html.HiddenFor(Model => Model.Id)
+                    <h1>@Model.Title</h1>
+                    <h2 class="subheading">@Model.Abstract</h2>
+                    <span class="meta">Posted on @Model.Created</span>
+                    @if (Model.Updated != null)
+                    {
+                        <p class="post-meta">Updated on @Model.Updated</p>
+                    }
+                    <hr />
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <button class="btn btn-danger" id="Delete">Delete</button>
+                
+
+                @if (Model.MediaURL != null)
+                {
+                    
+                    <img class="img-responsive" src="@Model.MediaURL" alt="">
+                }
+
+                @Html.Raw(Model.Body)
+            </div>
+        </div>
+    </div>
+</article>
+<hr>
+
+  
+
+
+@section scripts{
+    
+    <script>
+        $("#Delete").click(function () {
+            swal({
+                title: "Are you sure?",
+                text: "Once deleted, you will not be able to recover this post!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    //Add code here for AJAX call to perform requested delete action
+                    $.ajax({
+                        type: 'GET',
+                        url: "@Url.Action("AjaxDelete", "BlogPosts")",
+                        data: { id: Number($("#Id").val())},
+                        success: function (result) {
+                            if (result === "Success") {
+                                swal({
+                                    text: "Poof! Your post has been deleted!",
+                                    icon: "success",
+                                    buttons: {
+                                        cancel: "OK"
+                                    },
+                                })
+                                .then((value) => {
+                                    switch (value) {
+                                        default:
+                                            window.location.href = "@Url.Action("Index", "BlogPosts")";
+                                    }
+                                });
+                            }
+                            else {
+                                swal("Uh-Oh! Something went wrong while trying to delete...", {
+                                    icon: "error"
+                                });
+                            }
+                        },
+                        error: function () {
+                            swal("You Suck and something went horribly awry!", {
+                                icon: "error"
+                            });
+                        }
+                    });
+                }
+                else {
+                    swal("Your post will live to see another day.");
+                }
+            });
+        });
+        
+    </script>
+}

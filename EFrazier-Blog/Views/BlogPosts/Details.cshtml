@@ -1,0 +1,281 @@
+﻿@using EFrazier_Blog.Helpers
+@model EFrazier_Blog.Models.BlogPost
+
+<!-- Page Header -->
+<!-- Set your background image for this header on the line below. -->
+<header class="intro-header" style="background-color: mediumpurple">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>@Model.Title</h1>
+                    <h2 class="subheading">@Model.Abstract</h2>
+                    <span class="meta">Posted on @Model.Created.ToString().Split(' ')[0]</span>
+                    @if (Model.Updated != null)
+                    {
+                        <p class="post-meta">Updated on @Model.Updated.ToString().Split(' ')[0]</p>
+                    }
+                    <hr />
+                    <span class="meta">
+                        @if (User.IsInRole("Admin"))
+                        {
+
+                            @Html.ActionLink("Edit ", "Edit", new { id = Model.Id })
+                            <span> | </span>
+                            @Html.ActionLink(" Delete", "Delete", new { id = Model.Id })
+                        }
+                    </span>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                @if (Model.MediaURL != null)
+                {
+                    <img class="img-responsive" src="@Model.MediaURL" alt="">
+                }
+                @Html.Raw(Model.Body)
+                <button id="Back" class="btn btn-default">Back to index</button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                @if (Request.IsAuthenticated)
+                {
+                    using (Html.BeginForm("Create", "Comments", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+
+                        @Html.AntiForgeryToken()
+                        @Html.Hidden("BlogPostId", Model.Id)
+                        @Html.HiddenFor(model => model.Slug)
+
+                        @*<form name="sentMessage" id="contactForm" novalidate>*@
+                        <div class="row control-group">
+                            <div class="form-group col-xs-12 floating-label-form-group controls">
+                                <hr />
+                                <Label>@Html.Label("Add Comment", new { @class = "col-md-2 control-label" })</Label>
+
+                                @Html.TextArea("CommentBody", new { @class = "form-control", placeholder = "Add Comment", id = "name" })
+
+                            </div>
+                            <div class="row control-group">
+                                <div class="row">
+                                    <div class="form-group col-xs-12">
+                                        <br />
+                                        <input type="submit" value="Create" class="btn btn-default" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        //</form>
+                    }
+                }
+                else
+                {
+                    <br />
+                    <div class="alert-info">Please <a href=@Url.Action("Login", "Account")>sign in</a> to create a comment.</div>
+                    <br />
+                }
+
+
+                @foreach (var comment in Model.Comments.OrderByDescending(c => c.Created))
+                {
+                    if (UserRoleHelper.IsUserInRole(comment.AuthorId, "Admin"))
+                    {
+                        <div id="panel" class="panel panel-danger">
+
+                            <div class="panel-heading">
+                                @comment.Author.DisplayName
+                                <span class="text-muted small">(admin)</span>
+
+                            </div>
+                            <div class="panel-body">
+                                <div>@comment.Body</div>
+                                @if (comment.UpdateReason != null)
+                                {
+                                    <hr />
+                                    <div class="text-muted small">Comment changed for: @comment.UpdateReason</div>
+                                }
+
+                            </div>
+                            <div class="text-muted panel-body">
+                                <hr />
+                                <div>Created: @comment.Created.ToString().Split(' ')[0] </div>
+                                @if (comment.Updated != null)
+                                {
+                                    <div>Edited: @comment.Updated.ToString().Split(' ')[0]</div>
+                                }
+
+
+                                @if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
+                                {
+                                    @Html.ActionLink("Edit ", "Edit", "Comments", new { id = comment.Id }, null)
+
+                                    if (User.IsInRole("Admin"))
+                                    {
+                                        <span>|</span>
+                                        <button id="Delete" onclick="AjaxDelete(@comment.Id)" class="btn btn-danger">Delete</button>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    }
+                    else if (UserRoleHelper.IsUserInRole(comment.AuthorId, "Moderator"))
+                    {
+                        <div id="panel" class="panel panel-info">
+
+                            <div class="panel-heading">
+                                @comment.Author.DisplayName
+                                <span class="text-muted small">(mod)</span>
+
+                            </div>
+                            <div class="panel-body">
+                                <div>@comment.Body</div>
+                                @if (comment.UpdateReason != null)
+                                {
+                                    <hr />
+                                    <div class="text-muted small">Comment changed for: @comment.UpdateReason</div>
+                                }
+
+                            </div>
+                            <div class="text-muted panel-body">
+                                <hr />
+                                <div>Created: @comment.Created.ToString().Split(' ')[0] </div>
+                                @if (comment.Updated != null)
+                                {
+                                    <div>Edited: @comment.Updated.ToString().Split(' ')[0]</div>
+                                }
+
+
+                                @if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
+                                {
+                                    @Html.ActionLink("Edit ", "Edit", "Comments", new { id = comment.Id }, null)
+
+                                    if (User.IsInRole("Admin"))
+                                    {
+                                        <span>|</span>
+                                        <button id="Delete" onclick="AjaxDelete(@comment.Id)" class="btn btn-danger">Delete</button>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div id="panel" class="panel panel-default">
+
+                            <div class="panel-heading">
+                                @comment.Author.DisplayName
+
+
+                            </div>
+                            <div class="panel-body">
+                                <div>@comment.Body</div>
+                                @if (comment.UpdateReason != null)
+                                {
+                                    <hr />
+                                    <div class="text-muted small">Comment changed for: @comment.UpdateReason</div>
+                                }
+
+                            </div>
+                            <div class="text-muted panel-body">
+                                <hr />
+                                <div>Created: @comment.Created.ToString().Split(' ')[0] </div>
+                                @if (comment.Updated != null)
+                                {
+                                    <div>Edited: @comment.Updated.ToString().Split(' ')[0]</div>
+                                }
+
+
+                                @if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
+                                {
+                                    @Html.ActionLink("Edit ", "Edit", "Comments", new { id = comment.Id }, null)
+
+                                    if (User.IsInRole("Admin"))
+                                    {
+                                        <span>|</span>
+                                        <button id="Delete" onclick="AjaxDelete(@comment.Id)" class="btn btn-danger">Delete</button>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    }
+                    
+                }
+            </div>
+        </div>
+    </div>
+</article>
+<hr>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $("#Back").click(function () {
+            window.location.href = "@Url.Action("Index", "BlogPosts")";
+        });
+
+        function AjaxDelete(commentId) {
+            //$("#Delete").click(function () {
+                swal({
+                    title: "Are you sure?",
+                    text: "Once deleted, you will not be able to recover this post!",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                    .then((willDelete) => {
+                        if (willDelete) {
+                            //Add code here for AJAX call to perform requested delete action
+                            $.ajax({
+                                type: 'GET',
+                                url: "@Url.Action("AjaxDelete", "Comments")",
+                                data: { id: commentId },
+                                success: function (result) {
+                                    if (result === "Success") {
+                                        swal({
+                                            text: "Poof! This comment has been deleted!",
+                                            icon: "success",
+                                            buttons: {
+                                                cancel: "OK"
+                                            },
+                                        })
+                                            .then((value) => {
+                                                switch (value) {
+                                                    default:
+                                                    window.location.href = "@Url.Action("Details", "BlogPosts", new { slug = Model.Slug })";
+                                                        //return RedirectToAction("Details", "BlogPosts", new { slug = Slug }, null);
+                                                }
+                                            });
+                                    }
+                                    else {
+                                        swal("Uh-Oh! Something went wrong while trying to delete...", {
+                                            icon: "error"
+                                        });
+                                    }
+                                },
+                                error: function () {
+                                    swal("You Suck and something went horribly awry!", {
+                                        icon: "error"
+                                    });
+                                }
+                            });
+                        }
+                        else {
+                            swal("Your post will live to see another day.");
+                        }
+                    });
+            //});
+        }
+
+
+    </script>
+}

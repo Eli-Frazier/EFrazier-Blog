@@ -1,0 +1,169 @@
+﻿@model EFrazier_Blog.Models.RegisterViewModel
+
+@{
+    ViewBag.Title = "Register";
+}
+
+@*<style>
+    .navbar {
+        background-color: rgba(255, 255, 255, 0.9);
+    }
+
+    .navbar-custom .nav li a {
+        color: black;
+    }
+
+    .navbar-custom .navbar-brand {
+        color: black;
+    }
+
+    body {
+        padding-top: 50px;
+    }
+
+    .site-heading{
+        color: black;
+    }
+
+    #Something {
+        padding-left: 200px;
+    }
+</style>*@
+
+<header class="intro-header" style="background-color: crimson">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="site-heading">
+                    <h1>@ViewBag.Title</h1>
+                    <hr class="small">
+                    <span class="subheading">Create a new account</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="row control-group">
+                    <div class="form-group col-xs-12 floating-label-form-group controls">
+                        <Label>@Html.LabelFor(m => m.FirstName, new { @class = "col-md-2 control-label" })</Label>
+
+                        @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", placeholder = "First Name", id = "name" })
+                        <p class="help-block text-danger"> @Html.ValidationMessageFor(m => m.FirstName)</p>
+                    </div>
+                </div>
+                <div class="row control-group">
+                    <div class="form-group col-xs-12 floating-label-form-group controls">
+                        <Label>@Html.LabelFor(m => m.LastName, new { @class = "col-md-2 control-label" })</Label>
+
+                        @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", placeholder = "Last Name", id = "name" })
+                        <p class="help-block text-danger"> @Html.ValidationMessageFor(m => m.LastName)</p>
+                    </div>
+                </div>
+                <div class="row control-group">
+                    <div class="form-group col-xs-12 floating-label-form-group controls">
+                        <Label>@Html.LabelFor(m => m.DisplayName, new { @class = "col-md-2 control-label" })</Label>
+
+                        @Html.TextBoxFor(m => m.DisplayName, new { @class = "form-control", placeholder = "Display Name", id = "name" })
+                        <p class="help-block text-danger"> @Html.ValidationMessageFor(m => m.DisplayName)</p>
+                    </div>
+                </div>
+                <div class="row control-group">
+                    <div class="form-group col-xs-12 floating-label-form-group controls">
+                        <Label>@Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })</Label>
+
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Email Address", id = "name" })
+                        <p class="help-block text-danger"> @Html.ValidationMessageFor(m => m.Email)</p>
+                    </div>
+                </div>
+                <div class="row control-group">
+                    <div class="form-group col-xs-12 floating-label-form-group controls">
+                        <Label>@Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })</Label>
+
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Password", id = "name" })
+                        <p class="help-block text-danger"> @Html.ValidationMessageFor(m => m.Password)</p>
+                    </div>
+                </div>
+                <div class="row control-group">
+                    <div class="form-group col-xs-12 floating-label-form-group controls">
+                        <Label>@Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" })</Label>
+
+                        @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", placeholder = "Confirm Password", id = "name" })
+                        <p class="help-block text-danger"> @Html.ValidationMessageFor(m => m.ConfirmPassword)</p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-xs-12">
+                        <button type="submit" class="btn btn-default">Register</button>
+
+
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+            @*<div class="form-group">
+                @Html.LabelFor(m => m.FirstName, new { @class = "col-md-2 control-label" })
+
+                <div class="col-md-3">
+                    @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.LastName, new { @class = "col-md-2 control-label" })
+
+                <div class="col-md-3">
+                    @Html.TextBoxFor(m => m.LastName, new { @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.DisplayName, new { @class = "col-md-2 control-label" })
+
+                <div class="col-md-3">
+                    @Html.TextBoxFor(m => m.DisplayName, new { @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
+
+                <div class="col-md-3">
+                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
+                <div class="col-md-3">
+                    @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" })
+                <div class="col-md-3">
+                    @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+                </div>
+            </div>*@
+
+          
+        
+
+                    
+
+                    @section Scripts {
+                        @Scripts.Render("~/bundles/jqueryval")
+                    }
